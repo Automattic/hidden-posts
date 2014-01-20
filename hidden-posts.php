@@ -124,3 +124,7 @@ class Hidden_Posts {
 }
 
 new Hidden_Posts;
+
+function vip_get_hidden_posts() {
+    return Hidden_Posts::get_posts();
+}
