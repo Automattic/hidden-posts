@@ -168,7 +168,7 @@ class Hidden_Posts {
      * @return void The custom styles for the admin columns.
      */
     public function custom_column_style() {
-        print( '<style> .fixed .column-visibility { width: 5.5em; } </style>'  );
+        print( '<style> .fixed .column-visibility { width: 5.5em; } </style>' );
     }
 
 }
