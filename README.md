@@ -1,4 +1,4 @@
-=== Hidden Posts ===
+# Hidden Posts
 
 Contributors: automattic, betzster, batmoo
 Tags: posts
@@ -10,25 +10,25 @@ License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
 The opposite of sticky posts.
 
-== Description ==
+## Description
 
 Hide a limited number of specified posts from the hompage.
 
 If you'd like to check out the code and contribute, [join us on GitHub](https://github.com/Automattic/hidden-posts). Pull requests, issues, and plugin recommendations are more than welcome!
 
-== Installation ==
+## Installation
 
 1. Upload the `hidden-posts` folder to your plugins directory (e.g. `/wp-content/plugins/`)
 2. Activate the plugin through the 'Plugins' menu in WordPress
 3. Hide posts from the post edit screen
 
-== Frequently Asked Questions ==
+## Frequently Asked Questions
 
-= Why are there no FAQs besides this one? =
+### Why are there no FAQs besides this one?
 
 Because you haven't asked one yet.
 
-== Changelog ==
+## Changelog
 
-= 0.1 =
+### 0.1
 * Initial Release
