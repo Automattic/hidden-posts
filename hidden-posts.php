@@ -60,6 +60,10 @@ class Hidden_Posts {
     function hidden_checkbox() {
         global $post;
 
+        if ( 'post' !== $post->post_type ) {
+            return;
+        }
+
         $checked = in_array( $post->ID, self::get_posts() );
 
         wp_nonce_field( self::NONCE_KEY, self::NONCE_KEY );
