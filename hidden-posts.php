@@ -156,7 +156,7 @@ class Hidden_Posts {
     public function custom_column_data( string $column, int $post_id ) {
         if ( 'visibility' === $column ) {
             $post_ids = Hidden_Posts::get_posts();
-            echo in_array( $post_id, $post_ids ) ?
+            echo in_array( $post_id, $post_ids, true ) ?
                 '<span class="dashicons dashicons-hidden"></span>' :
                 '<span class="dashicons dashicons-visibility"></span>';
         }
