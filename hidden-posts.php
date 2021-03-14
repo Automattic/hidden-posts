@@ -32,6 +32,7 @@ class Hidden_Posts {
         add_action( 'post_submitbox_misc_actions', array( $this, 'hidden_checkbox' ) );
         add_action( 'save_post', array( $this, 'save_meta' ) );
         add_action( 'pre_get_posts', array( $this, 'pre_get_posts' ) );
+        add_action( 'upgrader_process_complete', array( $this, 'migrate_posts' ));
     }
 
     /**
@@ -109,6 +110,9 @@ class Hidden_Posts {
             array_shift( $posts );
 
         update_option( self::META_KEY, array_map( 'intval', $posts ) );
+
+        // Update post meta.
+        update_post_meta( $id, self::META_KEY, 1 );
     }
 
     /**
@@ -126,6 +130,21 @@ class Hidden_Posts {
         array_splice( $posts, array_search( $id, $posts ), 1 );
 
         update_option( self::META_KEY, array_map( 'intval', $posts ) );
+
+        // Update post meta.
+        update_post_meta( $id, self::META_KEY, 0 );
+    }
+
+    /**
+     * Migrate IDs of hidden posts by duplicating them from wp_options to wp_postmeta.
+     */
+    public function migrate_posts() {
+        $posts = self::get_posts();
+        foreach ( $posts as $post_id ) {
+            if ( get_post( $post_id ) ) {
+                update_post_meta( $post_id, self::META_KEY, 1 );
+            }
+        }
     }
 
 }
