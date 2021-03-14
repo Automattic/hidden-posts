@@ -35,6 +35,7 @@ class Hidden_Posts {
 		add_filter( 'manage_posts_columns', array( $this, 'custom_column_title' ) );
 		add_filter( 'manage_posts_custom_column', array( $this, 'custom_column_data' ), 10, 2 );
 		add_action( 'admin_head', array( $this, 'custom_column_style' ) );
+		add_action( 'upgrader_process_complete', array( $this, 'migrate_posts' ));
 	}
 
 	/**
@@ -106,6 +107,9 @@ class Hidden_Posts {
 		}
 
 		update_option( self::META_KEY, array_map( 'intval', $posts ) );
+
+		// Update post meta.
+		update_post_meta( $id, self::META_KEY, 1 );
 	}
 
 	/**
@@ -124,6 +128,21 @@ class Hidden_Posts {
 		array_splice( $posts, array_search( $id, $posts ), 1 );
 
 		update_option( self::META_KEY, array_map( 'intval', $posts ) );
+
+		// Update post meta.
+		update_post_meta( $id, self::META_KEY, 0 );
+	}
+
+	/**
+	 * Migrate IDs of hidden posts by duplicating them from wp_options to wp_postmeta.
+	 */
+	public function migrate_posts() {
+		$posts = self::get_posts();
+		foreach ( $posts as $post_id ) {
+			if ( get_post( $post_id ) ) {
+				update_post_meta( $post_id, self::META_KEY, 1 );
+			}
+		}
 	}
 
 	/**
