@@ -1,4 +1,5 @@
 === Hidden Posts ===
+
 Contributors: automattic, betzster, batmoo
 Tags: posts
 Requires at least: 3.8
