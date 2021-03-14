@@ -32,8 +32,6 @@ class Hidden_Posts {
         add_action( 'post_submitbox_misc_actions', array( $this, 'hidden_checkbox' ) );
         add_action( 'save_post', array( $this, 'save_meta' ) );
         add_action( 'pre_get_posts', array( $this, 'pre_get_posts' ) );
-        add_filter( 'manage_pages_columns', array( $this, 'custom_column_title' ) );
-        add_filter( 'manage_pages_custom_column', array( $this, 'custom_column_data'), 10, 2 );
         add_filter( 'manage_posts_columns', array( $this, 'custom_column_title' ) );
         add_filter( 'manage_posts_custom_column', array( $this, 'custom_column_data'), 10, 2 );
         add_action( 'admin_head', array( $this, 'custom_column_style' ) );
