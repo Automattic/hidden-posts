@@ -29,8 +29,8 @@ class Hidden_Posts {
     const LIMIT = 100;
 
     function __construct() {
-        add_action( 'post_submitbox_misc_actions', array( $this, 'hidden_checkbox' ) );
         add_action( 'save_post', array( $this, 'save_meta' ) );
+        add_action( 'add_meta_boxes', array( $this, 'add_metabox'  ) );
         add_action( 'pre_get_posts', array( $this, 'pre_get_posts' ) );
         add_filter( 'manage_posts_columns', array( $this, 'custom_column_title' ) );
         add_filter( 'manage_posts_custom_column', array( $this, 'custom_column_data'), 10, 2 );
@@ -55,18 +55,6 @@ class Hidden_Posts {
 			$post_not_in = $hidden_posts;
 		}
 		$query->set( 'post__not_in', $post_not_in );
-    }
-
-    /**
-     * Show the checkbox in the admin
-     */
-    function hidden_checkbox() {
-        global $post;
-
-        $checked = in_array( $post->ID, self::get_posts() );
-
-        wp_nonce_field( self::NONCE_KEY, self::NONCE_KEY );
-        printf( '<div id="superawesome-box" class="misc-pub-section"><label><input type="checkbox" name="%s" %s> %s</label></div>', self::META_KEY, checked( $checked, true, false ), esc_html( apply_filters( 'hidden_posts_checkbox_text', 'Hide Post' ) ) );
     }
 
     /**
@@ -167,6 +155,36 @@ class Hidden_Posts {
      */
     public function custom_column_style() {
         print( '<style> .fixed .column-visibility { width: 5.5em; } </style>' );
+    }
+  
+    /**
+     * Render the meta box for hiding a post.
+     */
+    public function add_metabox() {
+        add_meta_box(
+            'hidden-posts',
+            esc_html( apply_filters( 'hidden_posts_checkbox_title', 'Visibility' ) ),
+            array( $this, 'render_metabox' ),
+            'post',
+            'side',
+            'high'
+        );
+    }
+
+    /**
+     * Render the meta box for hiding a post.
+     *
+     * @param WP_Post $post The post object for which the metabox should be added.
+     */
+    public function render_metabox( WP_Post $post ) {
+        $checked = in_array( (int) $post->ID, self::get_posts(), true );
+        wp_nonce_field( self::NONCE_KEY, self::NONCE_KEY );
+        printf(
+            '<div id="superawesome-box" class="misc-pub-section"><label><input type="checkbox" name="%s" %s> %s</label></div>',
+            self::META_KEY,
+            checked( $checked, true, false ),
+            esc_html( apply_filters( 'hidden_posts_checkbox_text', 'Hide post' ) )
+        );
     }
 
 }
