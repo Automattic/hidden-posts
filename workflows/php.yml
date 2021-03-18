@@ -36,3 +36,4 @@ jobs:
 
     - name: Run PHP_CodeSniffer
       run: composer run-script phpcs
+      
