@@ -32,6 +32,9 @@ class Hidden_Posts {
         add_action( 'save_post', array( $this, 'save_meta' ) );
         add_action( 'add_meta_boxes', array( $this, 'add_metabox'  ) );
         add_action( 'pre_get_posts', array( $this, 'pre_get_posts' ) );
+        add_filter( 'manage_posts_columns', array( $this, 'custom_column_title' ) );
+        add_filter( 'manage_posts_custom_column', array( $this, 'custom_column_data'), 10, 2 );
+        add_action( 'admin_head', array( $this, 'custom_column_style' ) );
     }
 
     /**
@@ -116,6 +119,44 @@ class Hidden_Posts {
         update_option( self::META_KEY, array_map( 'intval', $posts ) );
     }
 
+    /**
+     * Add custom title to the admin columns.
+     *
+     * @param array $columns The original admin column titles.
+     * @return array The updated admin column titles.
+     */
+    public function custom_column_title( array $columns ): array {
+        unset($columns['date']);
+        $columns['visibility'] = esc_html__( 'Visibility' );
+        $columns['date'] = esc_html__( 'Date' );
+        return $columns;
+    }
+
+    /**
+     * Add custom data to the admin columns.
+     *
+     * @param string $column The column to which the data should be added.
+     * @param int $post_id The id of the post to which the data should be added.
+     * @return void The added data.
+     */
+    public function custom_column_data( string $column, int $post_id ) {
+        if ( 'visibility' === $column ) {
+            $post_ids = Hidden_Posts::get_posts();
+            echo in_array( $post_id, $post_ids, true ) ?
+                '<span class="dashicons dashicons-hidden"></span>' :
+                '<span class="dashicons dashicons-visibility"></span>';
+        }
+    }
+
+    /**
+     * Add custom styles to the admin columns.
+     *
+     * @return void The custom styles for the admin columns.
+     */
+    public function custom_column_style() {
+        print( '<style> .fixed .column-visibility { width: 5.5em; } </style>' );
+    }
+  
     /**
      * Render the meta box for hiding a post.
      */
