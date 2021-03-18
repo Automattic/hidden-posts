@@ -2,6 +2,7 @@
 Contributors: automattic, betzster, batmoo
 Tags: posts
 Requires at least: 3.8
+Requires PHP: 7.0
 Tested up to: 3.8
 Stable tag: 0.1
 License: GPLv2 or later
