@@ -7,7 +7,6 @@
 [![Compatible to PHP version](https://plugintests.com/plugins/hidden-posts/php-badge.svg)](https://plugintests.com/plugins/hidden-posts/latest)
 [![Downloads](https://img.shields.io/wordpress/plugin/dt/hidden-posts.svg)](https://wordpress.org/plugins/hidden-posts/)
 [![Plugin Version](https://img.shields.io/wordpress/plugin/v/hidden-posts.svg)](https://wordpress.org/plugins/hidden-posts/)
-[![Tag Version](https://img.shields.io/github/tag/Automattic/hidden-posts.svg)](https://wordpress.org/plugins/hidden-posts/)
 
 **Contributors:** automattic, betzster, batmoo  
 **Tags:** posts  
