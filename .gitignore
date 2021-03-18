@@ -1,0 +1,7 @@
+# Folders
+.idea
+node_modules
+vendor
+
+# Files
+.DS_Store
