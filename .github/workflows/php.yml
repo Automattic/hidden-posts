@@ -22,7 +22,10 @@ jobs:
       uses: shivammathur/setup-php@v2
       with:
         php-version: ${{ matrix.php-versions }}
-    
+      
+    - name: Check PHP version
+      run: php
+      
     - name: Validate composer.json and composer.lock
       run: composer validate --strict
 
