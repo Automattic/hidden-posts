@@ -1,12 +1,21 @@
 # Hidden Posts
 
-Contributors: automattic, betzster, batmoo  
-Tags: posts  
-Requires at least: 3.8  
-Tested up to: 3.8  
-Stable tag: 0.1  
-License: GPLv2 or later  
-License URI: http://www.gnu.org/licenses/gpl-2.0.html  
+[![Support Level](https://img.shields.io/badge/support-active-green.svg)](#support-level)
+[![Build Status](https://api.travis-ci.com/Automattic/hidden-posts.svg?branch=trunk)](https://api.travis-ci.com/Automattic/hidden-posts)
+[![GPLv2 License](https://img.shields.io/github/license/Automattic/hidden-posts.svg)](https://www.gnu.org/licenses/old-licenses/gpl-2.0.html)
+[![Compatible to WordPress version](https://plugintests.com/plugins/hidden-posts/wp-badge.svg)](https://plugintests.com/plugins/hidden-posts/latest)
+[![Compatible to PHP version](https://plugintests.com/plugins/hidden-posts/php-badge.svg)](https://plugintests.com/plugins/hidden-posts/latest)
+[![Downloads](https://img.shields.io/wordpress/plugin/dt/hidden-posts.svg)](https://wordpress.org/plugins/hidden-posts/)
+[![Plugin Version](https://img.shields.io/wordpress/plugin/v/hidden-posts.svg)](https://wordpress.org/plugins/hidden-posts/)
+[![Tag Version](https://img.shields.io/github/tag/Automattic/hidden-posts.svg)](https://wordpress.org/plugins/hidden-posts/)
+
+**Contributors:** automattic, betzster, batmoo  
+**Tags:** posts  
+**Requires at least:** 3.8  
+**Tested up to:** 3.8  
+**Stable tag:** 0.1  
+**License:** GPLv2 or later  
+**License URI:** http://www.gnu.org/licenses/gpl-2.0.html  
 
 The opposite of sticky posts.
 
