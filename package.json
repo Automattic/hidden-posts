@@ -1,0 +1,22 @@
+{
+  "name": "hidden-posts",
+  "version": "0.1.0",
+  "description": "The opposite of sticky posts.",
+  "dependencies": {},
+  "devDependencies": {},
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Automattic/hidden-posts.git"
+  },
+  "keywords": [
+    "WordPress",
+    "Plugin"
+  ],
+  "author": "",
+  "license": "GPL-2.0-or-later",
+  "bugs": {
+    "url": "https://github.com/Automattic/hidden-posts/issues"
+  },
+  "homepage": "https://github.com/Automattic/hidden-posts#readme"
+}
