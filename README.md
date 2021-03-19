@@ -1,7 +1,7 @@
 # Hidden Posts
 
 [![Support Level](https://img.shields.io/badge/support-active-green.svg)](#support-level)
-[![Build Status](https://api.travis-ci.com/Automattic/hidden-posts.svg?branch=trunk)](https://api.travis-ci.com/Automattic/hidden-posts)
+[![Build Status](https://github.com/Automattic/hidden-posts/actions/workflows/php.yml/badge.svg)](https://github.com/Automattic/hidden-posts/actions/workflows/php.yml)
 [![GPLv2 License](https://img.shields.io/github/license/Automattic/hidden-posts.svg)](https://www.gnu.org/licenses/old-licenses/gpl-2.0.html)
 [![Compatible to WordPress version](https://plugintests.com/plugins/hidden-posts/wp-badge.svg)](https://plugintests.com/plugins/hidden-posts/latest)
 [![Compatible to PHP version](https://plugintests.com/plugins/hidden-posts/php-badge.svg)](https://plugintests.com/plugins/hidden-posts/latest)
