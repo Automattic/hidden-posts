@@ -35,6 +35,7 @@ class Hidden_Posts {
 		add_action( 'pre_get_posts', array( $this, 'pre_get_posts' ) );
 		add_filter( 'manage_posts_columns', array( $this, 'custom_column_title' ) );
 		add_filter( 'manage_posts_custom_column', array( $this, 'custom_column_data' ), 10, 2 );
+		add_filter( 'views_edit-post', array( $this, 'custom_column_filter' ) );
 		add_action( 'admin_head', array( $this, 'custom_column_style' ) );
 	}
 
@@ -178,6 +179,48 @@ class Hidden_Posts {
 	 */
 	public function custom_column_style() {
 		print( '<style> .fixed .column-visibility { width: 5.5em; } </style>' );
+	}
+
+	/**
+	 * Add custom filter to the admin columns.
+	 *
+	 * @param array $views The original array with view links.
+	 *
+	 * @return array The updated array with view links.
+	 */
+	public function custom_column_filter( $views ) {
+
+		if ( ! is_admin() ) {
+			return $views;
+		}
+
+		if ( isset( $_GET['post_type'] ) && 'post' !== $_GET['post_type'] ) { // phpcs:ignore
+			return $views;
+		}
+
+		if ( ! count( get_option( 'hidden-posts' ) ) ) {
+			return $views;
+		}
+
+		global $wp_query;
+
+		$query           = array(
+			'post__in' => get_option( 'hidden-posts' ),
+		);
+		$result          = new WP_Query( $query );
+		$class           = ( isset( $_GET['show_hidden'] ) && '1' === $_GET['show_hidden'] ) ? ' class="current"' : ''; // phpcs:ignore
+		$views['hidden'] = sprintf(
+			'<a href="%s"' . $class . '>%s <span class="count">(%d)</span></a>',
+			admin_url( 'edit.php?post_type=post&show_hidden=1' ),
+			esc_html( apply_filters( 'hidden_posts_filter_title', 'Hidden' ) ),
+			$result->found_posts
+		);
+
+		if ( isset( $_GET['show_hidden'] ) && '1' === $_GET['show_hidden'] ) { // phpcs:ignore
+			$wp_query = $result; // phpcs:ignore
+		}
+
+		return $views;
 	}
 
 	/**
