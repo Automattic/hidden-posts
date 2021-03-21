@@ -65,9 +65,9 @@ class Hidden_Posts {
 	/**
 	 * Update the post array.
 	 *
-	 * @param WP_Post $post The post object that should be updated.
+	 * @param int $post The post object that should be updated.
 	 */
-	public function save_meta( WP_Post $post ) {
+	public function save_meta( int $post ) {
 		// Bail if nonce if not available.
 		if ( ! isset( $_POST[ self::NONCE_KEY ] ) ) {
 			return;
