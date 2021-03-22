@@ -122,8 +122,8 @@ class Hidden_Posts {
 
         update_option( self::META_KEY, array_map( 'intval', $posts ) );
 
-        // Update post meta.
-        update_post_meta( $id, self::META_KEY, 0 );
+        // Delete post meta.
+				delete_post_meta( $id, self::META_KEY );
     }
 
     /**
