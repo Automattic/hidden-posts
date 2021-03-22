@@ -27,12 +27,14 @@ class Hidden_Posts {
      * Maximum number of posts to store in the hidden array
      */
     const LIMIT = 100;
+		const VERSION = 1;
+		const VERSION_KEY = 'hidden_posts_version';
 
     function __construct() {
         add_action( 'save_post', array( $this, 'save_meta' ) );
         add_action( 'add_meta_boxes', array( $this, 'add_metabox'  ) );
         add_action( 'pre_get_posts', array( $this, 'pre_get_posts' ) );
-        add_action( 'upgrader_process_complete', array( $this, 'migrate_posts' ));
+        add_action( 'admin_init', array( $this, 'maybe_upgrade_version' ));
         add_filter( 'manage_posts_columns', array( $this, 'custom_column_title' ) );
         add_filter( 'manage_posts_custom_column', array( $this, 'custom_column_data'), 10, 2 );
         add_action( 'admin_head', array( $this, 'custom_column_style' ) );
@@ -125,18 +127,32 @@ class Hidden_Posts {
         // Delete post meta.
 				delete_post_meta( $id, self::META_KEY );
     }
+		
+		/**
+		 * Migrate IDs of hidden posts by duplicating them from wp_options to 
+		 * wp_postmeta in case the user is using an older version of the plugin.
+		 */
+		public function maybe_upgrade_version() {
+			$version = absint( get_option( self::VERSION_KEY, 0 ) );
 
-    /**
-     * Migrate IDs of hidden posts by duplicating them from wp_options to wp_postmeta.
-     */
-    public function migrate_posts() {
-        $posts = self::get_posts();
-        foreach ( $posts as $post_id ) {
-            if ( get_post( $post_id ) ) {
-                update_post_meta( $post_id, self::META_KEY, 1 );
-            }
+			if ( $version === self::VERSION ) {
+        return;
+			}
+
+			$posts = self::get_posts();
+
+			if ( ! $posts ) {
+				return;
+			}
+
+			foreach ( $posts as $post_id ) {
+        if ( get_post( $post_id ) ) {
+          update_post_meta( $post_id, self::META_KEY, 1 );
         }
-    }
+			}
+
+      update_option( self::VERSION_KEY, self::VERSION );
+		}
 
     /**
      * Add custom title to the admin columns.
