@@ -136,7 +136,7 @@ class Hidden_Posts {
 			$version = absint( get_option( self::VERSION_KEY, 0 ) );
 
 			if ( $version === self::VERSION ) {
-        return;
+				return;
 			}
 
 			$posts = self::get_posts();
@@ -146,12 +146,12 @@ class Hidden_Posts {
 			}
 
 			foreach ( $posts as $post_id ) {
-        if ( get_post( $post_id ) ) {
-          update_post_meta( $post_id, self::META_KEY, 1 );
-        }
+				if ( get_post( $post_id ) ) {
+					update_post_meta( $post_id, self::META_KEY, 1 );
+				}
 			}
 
-      update_option( self::VERSION_KEY, self::VERSION );
+			update_option( self::VERSION_KEY, self::VERSION );
 		}
 
     /**
