@@ -66,7 +66,7 @@ class Hidden_Posts {
 	/**
 	 * Update the post array.
 	 *
-	 * @param int $post The post object that should be updated.
+	 * @param int $post The post ID that should be updated.
 	 */
 	public function save_meta( int $post ) {
 		// Bail if nonce if not available.
