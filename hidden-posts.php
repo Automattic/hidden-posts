@@ -140,6 +140,8 @@ class Hidden_Posts {
         return;
       }
 
+      update_option( self::VERSION_KEY, self::VERSION );
+      
       $posts = self::get_posts();
 
       if ( ! $posts ) {
@@ -151,8 +153,6 @@ class Hidden_Posts {
           update_post_meta( $post_id, self::META_KEY, 1 );
         }
       }
-
-      update_option( self::VERSION_KEY, self::VERSION );
     }
 
     /**
