@@ -27,6 +27,7 @@ class Hidden_Posts {
      * Maximum number of posts to store in the hidden array
      */
     const LIMIT = 100;
+    // Only bump version number when update script must be triggered.
     const VERSION = 1;
     const VERSION_KEY = 'hidden_posts_version';
 
