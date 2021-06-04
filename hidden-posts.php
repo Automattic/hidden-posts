@@ -33,7 +33,7 @@ class Hidden_Posts {
         add_action( 'add_meta_boxes', array( $this, 'add_metabox'  ) );
         add_action( 'pre_get_posts', array( $this, 'pre_get_posts' ) );
         add_filter( 'manage_posts_columns', array( $this, 'custom_column_title' ) );
-        add_filter( 'manage_posts_custom_column', array( $this, 'custom_column_data'), 10, 2 );
+        add_action( 'manage_posts_custom_column', array( $this, 'custom_column_data'), 10, 2 );
         add_action( 'admin_head', array( $this, 'custom_column_style' ) );
     }
 
@@ -156,7 +156,7 @@ class Hidden_Posts {
     public function custom_column_style() {
         print( '<style> .fixed .column-visibility { width: 5.5em; } </style>' );
     }
-  
+
     /**
      * Render the meta box for hiding a post.
      */
@@ -181,7 +181,7 @@ class Hidden_Posts {
         wp_nonce_field( self::NONCE_KEY, self::NONCE_KEY );
         printf(
             '<div id="superawesome-box" class="misc-pub-section"><label><input type="checkbox" name="%s" %s> %s</label></div>',
-            self::META_KEY,
+            esc_attr( self::META_KEY ),
             checked( $checked, true, false ),
             esc_html( apply_filters( 'hidden_posts_checkbox_text', 'Hide post' ) )
         );
