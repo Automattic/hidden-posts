@@ -125,7 +125,7 @@ class Hidden_Posts {
      * @param array $columns The original admin column titles.
      * @return array The updated admin column titles.
      */
-    public function custom_column_title( array $columns ): array {
+    public function custom_column_title( array $columns ) {
         unset($columns['date']);
         $columns['visibility'] = esc_html__( 'Visibility' );
         $columns['date'] = esc_html__( 'Date' );
