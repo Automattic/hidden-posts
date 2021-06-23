@@ -6,6 +6,8 @@
  * Author:      Automattic
  * Author URI:  http://automattic.com
  * License:     GPLv2 or later
+ *
+ * @package Hidden_Posts
  */
 
 /**
@@ -28,7 +30,7 @@ class Hidden_Posts {
 	 */
 	const LIMIT = 100;
 
-	function __construct() {
+	public function __construct() {
 		add_action( 'save_post', array( $this, 'save_meta' ) );
 		add_action( 'add_meta_boxes', array( $this, 'add_metabox' ) );
 		add_action( 'pre_get_posts', array( $this, 'pre_get_posts' ) );
@@ -39,8 +41,10 @@ class Hidden_Posts {
 
 	/**
 	 * Hide the posts in the hidden array on the homepage
+	 *
+	 * @param WP_Query $query The WP_Query instance.
 	 */
-	function pre_get_posts( $query ) {
+	public function pre_get_posts( $query ) {
 		if ( is_admin() || ! $query->is_main_query() ) {
 			return;
 		}
@@ -61,14 +65,16 @@ class Hidden_Posts {
 
 	/**
 	 * Update the post array
+	 *
+	 * @param int $post Post ID.
 	 */
-	function save_meta( $post ) {
-		// Verify the nonce
+	public function save_meta( $post ) {
+		// Verify the nonce.
 		if ( ! isset( $_POST[ self::NONCE_KEY ] ) || ! wp_verify_nonce( $_POST[ self::NONCE_KEY ], self::NONCE_KEY ) ) {
 			return;
 		}
 
-		// Update the post array if necessary
+		// Update the post array if necessary.
 		if ( isset( $_POST[ self::META_KEY ] ) ) {
 			self::add_post( $post );
 		} else {
@@ -78,8 +84,10 @@ class Hidden_Posts {
 
 	/**
 	 * Get the array of posts
+	 *
+	 * @return array Array of Post IDs.
 	 */
-	static function get_posts() {
+	public static function get_posts() {
 		return array_filter( array_map( 'absint', get_option( self::META_KEY, array() ) ) );
 	}
 
@@ -89,20 +97,25 @@ class Hidden_Posts {
 	 * If the post is already in the hidden array,
 	 * just bail. Otherwise, add it. Also,
 	 * make sure we don't go over the specified limit.
+	 *
+	 * @param int $id Post ID.
 	 */
-	static function add_post( $id ) {
+	public static function add_post( $id ) {
 		$posts = self::get_posts();
 
 		if ( in_array( $id, $posts ) ) {
 			return;
 		}
 
-		// Add the post to the array
+		// Add the post to the array.
 		$posts[] = $id;
 
-		// Make sure there are only LIMIT posts in the array
-		while ( count( $posts ) > self::LIMIT ) {
+		$count_posts = count( $posts );
+
+		// Make sure there are only LIMIT posts in the array.
+		while ( $count_posts > self::LIMIT ) {
 			array_shift( $posts );
+			$count_posts = count( $posts );
 		}
 
 		update_option( self::META_KEY, array_map( 'intval', $posts ) );
@@ -113,8 +126,10 @@ class Hidden_Posts {
 	 *
 	 * If the post doesn't exist in the hidden array,
 	 * just bail. Otherwise, splice it out.
+	 *
+	 * @param int $id Post ID.
 	 */
-	static function remove_post( $id ) {
+	public static function remove_post( $id ) {
 		$posts = self::get_posts();
 
 		if ( ! in_array( $id, $posts ) ) {
@@ -134,8 +149,8 @@ class Hidden_Posts {
 	 */
 	public function custom_column_title( array $columns ) {
 		unset( $columns['date'] );
-		$columns['visibility'] = esc_html__( 'Visibility' );
-		$columns['date']       = esc_html__( 'Date' );
+		$columns['visibility'] = esc_html__( 'Visibility', 'hidden-posts' );
+		$columns['date']       = esc_html__( 'Date', 'hidden-posts' );
 		return $columns;
 	}
 
@@ -198,6 +213,11 @@ class Hidden_Posts {
 
 new Hidden_Posts();
 
-function vip_get_hidden_posts() {
+/**
+ * Helper fucntion to get hidden posts
+ *
+ * @return array Array of Post IDs.
+ */
+function vip_get_hidden_posts() { // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedFunctionFound
 	return Hidden_Posts::get_posts();
 }
