@@ -20,7 +20,7 @@
  */
 class Hidden_Posts {
 
-	const META_KEY = 'hidden-posts';
+	const META_KEY  = 'hidden-posts';
 	const NONCE_KEY = 'hidden-posts-nonce';
 
 	/**
@@ -30,10 +30,10 @@ class Hidden_Posts {
 
 	function __construct() {
 		add_action( 'save_post', array( $this, 'save_meta' ) );
-		add_action( 'add_meta_boxes', array( $this, 'add_metabox'  ) );
+		add_action( 'add_meta_boxes', array( $this, 'add_metabox' ) );
 		add_action( 'pre_get_posts', array( $this, 'pre_get_posts' ) );
 		add_filter( 'manage_posts_columns', array( $this, 'custom_column_title' ) );
-		add_action( 'manage_posts_custom_column', array( $this, 'custom_column_data'), 10, 2 );
+		add_action( 'manage_posts_custom_column', array( $this, 'custom_column_data' ), 10, 2 );
 		add_action( 'admin_head', array( $this, 'custom_column_style' ) );
 	}
 
@@ -41,14 +41,16 @@ class Hidden_Posts {
 	 * Hide the posts in the hidden array on the homepage
 	 */
 	function pre_get_posts( $query ) {
-		if ( is_admin() || ! $query->is_main_query() )
+		if ( is_admin() || ! $query->is_main_query() ) {
 			return;
+		}
 
-		if ( apply_filters( 'hidden_posts_show_posts', is_single() ) )
+		if ( apply_filters( 'hidden_posts_show_posts', is_single() ) ) {
 			return;
+		}
 
 		$hidden_posts = self::get_posts();
-		$post_not_in = $query->get( 'post__not_in' );
+		$post_not_in  = $query->get( 'post__not_in' );
 		if ( is_array( $post_not_in ) ) {
 			$post_not_in = array_unique( array_merge( $post_not_in, $hidden_posts ) );
 		} else {
@@ -62,14 +64,16 @@ class Hidden_Posts {
 	 */
 	function save_meta( $post ) {
 		// Verify the nonce
-		if ( ! isset( $_POST[ self::NONCE_KEY ] ) || ! wp_verify_nonce( $_POST[ self::NONCE_KEY ], self::NONCE_KEY ) )
+		if ( ! isset( $_POST[ self::NONCE_KEY ] ) || ! wp_verify_nonce( $_POST[ self::NONCE_KEY ], self::NONCE_KEY ) ) {
 			return;
+		}
 
 		// Update the post array if necessary
-		if ( isset( $_POST[ self::META_KEY ] ) )
+		if ( isset( $_POST[ self::META_KEY ] ) ) {
 			self::add_post( $post );
-		else
+		} else {
 			self::remove_post( $post );
+		}
 	}
 
 	/**
@@ -89,15 +93,17 @@ class Hidden_Posts {
 	static function add_post( $id ) {
 		$posts = self::get_posts();
 
-		if ( in_array( $id, $posts ) )
+		if ( in_array( $id, $posts ) ) {
 			return;
+		}
 
 		// Add the post to the array
 		$posts[] = $id;
 
 		// Make sure there are only LIMIT posts in the array
-		while ( count( $posts ) > self::LIMIT )
+		while ( count( $posts ) > self::LIMIT ) {
 			array_shift( $posts );
+		}
 
 		update_option( self::META_KEY, array_map( 'intval', $posts ) );
 	}
@@ -111,8 +117,9 @@ class Hidden_Posts {
 	static function remove_post( $id ) {
 		$posts = self::get_posts();
 
-		if ( ! in_array( $id, $posts ) )
+		if ( ! in_array( $id, $posts ) ) {
 			return;
+		}
 
 		array_splice( $posts, array_search( $id, $posts ), 1 );
 
@@ -126,9 +133,9 @@ class Hidden_Posts {
 	 * @return array The updated admin column titles.
 	 */
 	public function custom_column_title( array $columns ) {
-		unset($columns['date']);
+		unset( $columns['date'] );
 		$columns['visibility'] = esc_html__( 'Visibility' );
-		$columns['date'] = esc_html__( 'Date' );
+		$columns['date']       = esc_html__( 'Date' );
 		return $columns;
 	}
 
@@ -136,12 +143,12 @@ class Hidden_Posts {
 	 * Add custom data to the admin columns.
 	 *
 	 * @param string $column The column to which the data should be added.
-	 * @param int $post_id The id of the post to which the data should be added.
+	 * @param int    $post_id The id of the post to which the data should be added.
 	 * @return void The added data.
 	 */
 	public function custom_column_data( string $column, int $post_id ) {
 		if ( 'visibility' === $column ) {
-			$post_ids = Hidden_Posts::get_posts();
+			$post_ids = self::get_posts();
 			echo in_array( $post_id, $post_ids, true ) ?
 				'<span class="dashicons dashicons-hidden"></span>' :
 				'<span class="dashicons dashicons-visibility"></span>';
@@ -181,7 +188,7 @@ class Hidden_Posts {
 		wp_nonce_field( self::NONCE_KEY, self::NONCE_KEY );
 		printf(
 			'<div id="superawesome-box" class="misc-pub-section"><label><input type="checkbox" name="%s" %s> %s</label></div>',
-			self::META_KEY,
+			esc_attr( self::META_KEY ),
 			checked( $checked, true, false ),
 			esc_html( apply_filters( 'hidden_posts_checkbox_text', 'Hide post' ) )
 		);
@@ -189,7 +196,7 @@ class Hidden_Posts {
 
 }
 
-new Hidden_Posts;
+new Hidden_Posts();
 
 function vip_get_hidden_posts() {
 	return Hidden_Posts::get_posts();
