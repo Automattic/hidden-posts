@@ -1,4 +1,4 @@
-<?php
+<?php // phpcs:ignore WordPress.Files.FileName.InvalidClassFileName
 /**
  * Plugin Name: Hidden Posts
  * Description: Hide posts on the home page.
@@ -30,6 +30,9 @@ class Hidden_Posts {
 	 */
 	const LIMIT = 100;
 
+	/**
+	 * Get hooked in!
+	 */
 	public function __construct() {
 		add_action( 'save_post', array( $this, 'save_meta' ) );
 		add_action( 'add_meta_boxes', array( $this, 'add_metabox' ) );
@@ -70,7 +73,7 @@ class Hidden_Posts {
 	 */
 	public function save_meta( $post ) {
 		// Verify the nonce.
-		if ( ! isset( $_POST[ self::NONCE_KEY ] ) || ! wp_verify_nonce( $_POST[ self::NONCE_KEY ], self::NONCE_KEY ) ) {
+		if ( ! isset( $_POST[ self::NONCE_KEY ] ) || ! wp_verify_nonce( sanitize_text_field( $_POST[ self::NONCE_KEY ] ), self::NONCE_KEY ) ) {
 			return;
 		}
 
@@ -161,7 +164,7 @@ class Hidden_Posts {
 	 * @param int    $post_id The id of the post to which the data should be added.
 	 * @return void The added data.
 	 */
-	public function custom_column_data( string $column, int $post_id ) {
+	public function custom_column_data( $column, $post_id ) {
 		if ( 'visibility' === $column ) {
 			$post_ids = self::get_posts();
 			echo in_array( $post_id, $post_ids, true ) ?
