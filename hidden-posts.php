@@ -125,7 +125,7 @@ class Hidden_Posts {
 	 * @param array $columns The original admin column titles.
 	 * @return array The updated admin column titles.
 	 */
-	public function custom_column_title( array $columns ): array {
+	public function custom_column_title( array $columns ) {
 		unset($columns['date']);
 		$columns['visibility'] = esc_html__( 'Visibility' );
 		$columns['date'] = esc_html__( 'Date' );
@@ -181,7 +181,7 @@ class Hidden_Posts {
 		wp_nonce_field( self::NONCE_KEY, self::NONCE_KEY );
 		printf(
 			'<div id="superawesome-box" class="misc-pub-section"><label><input type="checkbox" name="%s" %s> %s</label></div>',
-			esc_attr( self::META_KEY ),
+			self::META_KEY,
 			checked( $checked, true, false ),
 			esc_html( apply_filters( 'hidden_posts_checkbox_text', 'Hide post' ) )
 		);
