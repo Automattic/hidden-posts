@@ -26,7 +26,7 @@ class Hidden_Posts {
 	const NONCE_KEY = 'hidden-posts-nonce';
 
 	/**
-	 * Maximum number of posts to store in the hidden array
+	 * Maximum number of posts to store in the hidden array.
 	 */
 	const LIMIT = 100;
 
@@ -43,7 +43,7 @@ class Hidden_Posts {
 	}
 
 	/**
-	 * Hide the posts in the hidden array on the homepage
+	 * Hide the posts in the hidden array on the homepage.
 	 *
 	 * @param WP_Query $query The WP_Query instance.
 	 */
@@ -67,7 +67,7 @@ class Hidden_Posts {
 	}
 
 	/**
-	 * Update the post array
+	 * Update the post array.
 	 *
 	 * @param int $post Post ID.
 	 */
@@ -86,7 +86,7 @@ class Hidden_Posts {
 	}
 
 	/**
-	 * Get the array of posts
+	 * Get the array of posts.
 	 *
 	 * @return array Array of Post IDs.
 	 */
@@ -95,7 +95,7 @@ class Hidden_Posts {
 	}
 
 	/**
-	 * Add the post to the hidden array
+	 * Add the post to the hidden array.
 	 *
 	 * If the post is already in the hidden array,
 	 * just bail. Otherwise, add it. Also,
@@ -125,7 +125,7 @@ class Hidden_Posts {
 	}
 
 	/**
-	 * Remove the post from the hidden array
+	 * Remove the post from the hidden array.
 	 *
 	 * If the post doesn't exist in the hidden array,
 	 * just bail. Otherwise, splice it out.
