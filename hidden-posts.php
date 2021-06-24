@@ -210,8 +210,9 @@ class Hidden_Posts {
 		$result          = new WP_Query( $query );
 		$class           = ( isset( $_GET['show_hidden'] ) && '1' === $_GET['show_hidden'] ) ? 'class="current"' : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		$views['hidden'] = sprintf(
-			'<a href="%s"' . $class . '>%s <span class="count">(%d)</span></a>',
+			'<a href="%s" %s>%s <span class="count">(%d)</span></a>',
 			admin_url( 'edit.php?post_type=post&show_hidden=1' ),
+			$class,
 			esc_html( apply_filters( 'hidden_posts_filter_title', 'Hidden' ) ),
 			$result->found_posts
 		);
