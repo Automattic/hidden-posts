@@ -198,14 +198,14 @@ class Hidden_Posts {
 			return $views;
 		}
 
-		if ( ! count( get_option( 'hidden-posts' ) ) ) {
+		if ( ! count( get_option( self::META_KEY, array() ) ) ) {
 			return $views;
 		}
 
 		global $wp_query;
 
 		$query           = array(
-			'post__in' => get_option( 'hidden-posts' ),
+			'post__in' => get_option( self::META_KEY, array() )
 		);
 		$result          = new WP_Query( $query );
 		$class           = ( isset( $_GET['show_hidden'] ) && '1' === $_GET['show_hidden'] ) ? 'class="current"' : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
