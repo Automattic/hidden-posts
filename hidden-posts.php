@@ -194,7 +194,7 @@ class Hidden_Posts {
 			return $views;
 		}
 
-		if ( isset( $_GET['post_type'] ) && 'post' !== $_GET['post_type'] ) { // phpcs:ignore
+		if ( isset( $_GET['post_type'] ) && 'post' !== $_GET['post_type'] ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			return $views;
 		}
 
@@ -208,7 +208,7 @@ class Hidden_Posts {
 			'post__in' => get_option( 'hidden-posts' ),
 		);
 		$result          = new WP_Query( $query );
-		$class           = ( isset( $_GET['show_hidden'] ) && '1' === $_GET['show_hidden'] ) ? ' class="current"' : ''; // phpcs:ignore
+		$class           = ( isset( $_GET['show_hidden'] ) && '1' === $_GET['show_hidden'] ) ? 'class="current"' : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		$views['hidden'] = sprintf(
 			'<a href="%s"' . $class . '>%s <span class="count">(%d)</span></a>',
 			admin_url( 'edit.php?post_type=post&show_hidden=1' ),
@@ -216,8 +216,8 @@ class Hidden_Posts {
 			$result->found_posts
 		);
 
-		if ( isset( $_GET['show_hidden'] ) && '1' === $_GET['show_hidden'] ) { // phpcs:ignore
-			$wp_query = $result; // phpcs:ignore
+		if ( isset( $_GET['show_hidden'] ) && '1' === $_GET['show_hidden'] ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			$wp_query = $result; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
 		}
 
 		return $views;
