@@ -217,7 +217,7 @@ class Hidden_Posts {
 new Hidden_Posts();
 
 /**
- * Helper fucntion to get hidden posts
+ * Helper function to get hidden posts.
  *
  * @return array Array of Post IDs.
  */
