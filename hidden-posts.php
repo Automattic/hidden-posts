@@ -22,9 +22,9 @@
  */
 class Hidden_Posts {
 
-	const META_KEY  = 'hidden-posts';
-	const NONCE_KEY = 'hidden-posts-nonce';
-	const LIMIT     = 100;
+	const OPTION_KEY = 'hidden-posts';
+	const NONCE_KEY  = 'hidden-posts-nonce';
+	const LIMIT      = 100;
 
 	/**
 	 * Constructor to call all needed functions.
@@ -80,7 +80,7 @@ class Hidden_Posts {
 		}
 
 		// Update the post array if necessary.
-		if ( isset( $_POST[ self::META_KEY ] ) ) {
+		if ( isset( $_POST[ self::OPTION_KEY ] ) ) {
 			self::add_post( $post );
 		} else {
 			self::remove_post( $post );
@@ -93,7 +93,7 @@ class Hidden_Posts {
 	 * @return array The array with the IDs of all hidden posts.
 	 */
 	public static function get_posts() {
-		return array_filter( array_map( 'absint', get_option( self::META_KEY, array() ) ) );
+		return array_filter( array_map( 'absint', get_option( self::OPTION_KEY, array() ) ) );
 	}
 
 	/**
@@ -120,7 +120,7 @@ class Hidden_Posts {
 			array_shift( $posts );
 		}
 
-		update_option( self::META_KEY, array_map( 'intval', $posts ) );
+		update_option( self::OPTION_KEY, array_map( 'intval', $posts ) );
 	}
 
 	/**
@@ -140,7 +140,7 @@ class Hidden_Posts {
 
 		array_splice( $posts, array_search( $id, $posts, true ), 1 );
 
-		update_option( self::META_KEY, array_map( 'intval', $posts ) );
+		update_option( self::OPTION_KEY, array_map( 'intval', $posts ) );
 	}
 
 	/**
@@ -198,14 +198,14 @@ class Hidden_Posts {
 			return $views;
 		}
 
-		if ( ! count( get_option( self::META_KEY, array() ) ) ) {
+		if ( ! count( get_option( self::OPTION_KEY, array() ) ) ) {
 			return $views;
 		}
 
 		global $wp_query;
 
 		$query           = array(
-			'post__in' => get_option( self::META_KEY, array() )
+			'post__in' => get_option( self::OPTION_KEY, array() ),
 		);
 		$result          = new WP_Query( $query );
 		$class           = ( isset( $_GET['show_hidden'] ) && '1' === $_GET['show_hidden'] ) ? 'class="current"' : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
@@ -248,7 +248,7 @@ class Hidden_Posts {
 		wp_nonce_field( self::NONCE_KEY, self::NONCE_KEY );
 		printf(
 			'<div id="superawesome-box" class="misc-pub-section"><label><input type="checkbox" name="%s" %s> %s</label></div>',
-			self::META_KEY, //phpcs:ignore
+			self::OPTION_KEY, //phpcs:ignore
 			checked( $checked, true, false ),
 			esc_html( apply_filters( 'hidden_posts_checkbox_text', 'Hide post' ) )
 		);
