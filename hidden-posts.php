@@ -22,13 +22,9 @@
  */
 class Hidden_Posts {
 
-	const META_KEY  = 'hidden-posts';
-	const NONCE_KEY = 'hidden-posts-nonce';
-
-	/**
-	 * Maximum number of posts to store in the hidden array.
-	 */
-	const LIMIT = 100;
+	const OPTION_KEY = 'hidden-posts';
+	const NONCE_KEY  = 'hidden-posts-nonce';
+	const LIMIT      = 100; // Maximum number of posts to store in the hidden array.
 
 	/**
 	 * Get hooked in!
@@ -40,6 +36,7 @@ class Hidden_Posts {
 		add_filter( 'manage_posts_columns', array( $this, 'custom_column_title' ) );
 		add_action( 'manage_posts_custom_column', array( $this, 'custom_column_data' ), 10, 2 );
 		add_action( 'admin_head', array( $this, 'custom_column_style' ) );
+		add_filter( 'views_edit-post', array( $this, 'custom_column_filter' ) );
 	}
 
 	/**
@@ -78,7 +75,7 @@ class Hidden_Posts {
 		}
 
 		// Update the post array if necessary.
-		if ( isset( $_POST[ self::META_KEY ] ) ) {
+		if ( isset( $_POST[ self::OPTION_KEY ] ) ) {
 			self::add_post( $post );
 		} else {
 			self::remove_post( $post );
@@ -91,7 +88,7 @@ class Hidden_Posts {
 	 * @return array Array of Post IDs.
 	 */
 	public static function get_posts() {
-		return array_filter( array_map( 'absint', get_option( self::META_KEY, array() ) ) );
+		return array_filter( array_map( 'absint', get_option( self::OPTION_KEY, array() ) ) );
 	}
 
 	/**
@@ -121,7 +118,7 @@ class Hidden_Posts {
 			$count_posts = count( $posts );
 		}
 
-		update_option( self::META_KEY, array_map( 'intval', $posts ) );
+		update_option( self::OPTION_KEY, array_map( 'intval', $posts ) );
 	}
 
 	/**
@@ -141,7 +138,7 @@ class Hidden_Posts {
 
 		array_splice( $posts, array_search( $id, $posts ), 1 );
 
-		update_option( self::META_KEY, array_map( 'intval', $posts ) );
+		update_option( self::OPTION_KEY, array_map( 'intval', $posts ) );
 	}
 
 	/**
@@ -183,6 +180,48 @@ class Hidden_Posts {
 	}
 
 	/**
+	 * Add custom filter to the admin columns.
+	 *
+	 * @param array $views The original array with view links.
+	 *
+	 * @return array The updated array with view links.
+	 */
+	public function custom_column_filter( $views ) {
+		if ( ! is_admin() ) {
+			return $views;
+		}
+
+		if ( isset( $_GET['post_type'] ) && 'post' !== $_GET['post_type'] ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			return $views;
+		}
+
+		if ( ! count( get_option( self::OPTION_KEY, array() ) ) ) {
+			return $views;
+		}
+
+		global $wp_query;
+
+		$query           = array(
+			'post__in' => get_option( self::OPTION_KEY, array() ),
+		);
+		$result          = new WP_Query( $query );
+		$class           = ( isset( $_GET['show_hidden'] ) && '1' === $_GET['show_hidden'] ) ? 'class="current"' : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$views['hidden'] = sprintf(
+			'<a href="%s" %s>%s <span class="count">(%d)</span></a>',
+			admin_url( 'edit.php?post_type=post&show_hidden=1' ),
+			$class,
+			esc_html( apply_filters( 'hidden_posts_filter_title', 'Hidden' ) ),
+			$result->found_posts
+		);
+
+		if ( isset( $_GET['show_hidden'] ) && '1' === $_GET['show_hidden'] ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			$wp_query = $result; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
+		}
+
+		return $views;
+	}
+
+	/**
 	 * Render the meta box for hiding a post.
 	 */
 	public function add_metabox() {
@@ -206,7 +245,7 @@ class Hidden_Posts {
 		wp_nonce_field( self::NONCE_KEY, self::NONCE_KEY );
 		printf(
 			'<div id="superawesome-box" class="misc-pub-section"><label><input type="checkbox" name="%s" %s> %s</label></div>',
-			esc_attr( self::META_KEY ),
+			esc_attr( self::OPTION_KEY ),
 			checked( $checked, true, false ),
 			esc_html( apply_filters( 'hidden_posts_checkbox_text', 'Hide post' ) )
 		);
