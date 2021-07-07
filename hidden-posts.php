@@ -29,7 +29,7 @@ class Hidden_Posts {
 	/**
 	 * Get hooked in!
 	 */
-	public function __construct() {
+	public function run() {
 		add_action( 'save_post', array( $this, 'save_meta' ) );
 		add_action( 'add_meta_boxes', array( $this, 'add_metabox' ) );
 		add_action( 'pre_get_posts', array( $this, 'pre_get_posts' ) );
@@ -87,7 +87,7 @@ class Hidden_Posts {
 	 *
 	 * @return array Array of Post IDs.
 	 */
-	public static function get_posts() {
+	public function get_posts() {
 		return array_filter( array_map( 'absint', get_option( self::OPTION_KEY, array() ) ) );
 	}
 
@@ -100,7 +100,7 @@ class Hidden_Posts {
 	 *
 	 * @param int $id Post ID.
 	 */
-	public static function add_post( $id ) {
+	public function add_post( $id ) {
 		$posts = self::get_posts();
 
 		if ( in_array( $id, $posts ) ) {
@@ -253,7 +253,8 @@ class Hidden_Posts {
 
 }
 
-new Hidden_Posts();
+$hidden_posts = new Hidden_Posts();
+$hidden_posts->run();
 
 /**
  * Helper function to get hidden posts.
@@ -261,5 +262,5 @@ new Hidden_Posts();
  * @return array Array of Post IDs.
  */
 function vip_get_hidden_posts() { // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedFunctionFound
-	return Hidden_Posts::get_posts();
+	return $hidden_posts->get_posts();
 }
