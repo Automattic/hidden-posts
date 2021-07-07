@@ -262,5 +262,6 @@ $hidden_posts->run();
  * @return array Array of Post IDs.
  */
 function vip_get_hidden_posts() { // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedFunctionFound
+	$hidden_posts = new Hidden_Posts();
 	return $hidden_posts->get_posts();
 }
