@@ -37,6 +37,8 @@ class Hidden_Posts {
 		add_action( 'manage_posts_custom_column', array( $this, 'custom_column_data' ), 10, 2 );
 		add_action( 'admin_head', array( $this, 'custom_column_style' ) );
 		add_filter( 'views_edit-post', array( $this, 'custom_column_filter' ) );
+		add_filter( 'get_previous_post_where', array( $this, 'render_pagination' ) );
+		add_filter( 'get_next_post_where', array( $this, 'render_pagination' ) );
 	}
 
 	/**
@@ -249,6 +251,29 @@ class Hidden_Posts {
 			checked( $checked, true, false ),
 			esc_html( apply_filters( 'hidden_posts_checkbox_text', 'Hide post' ) )
 		);
+	}
+
+	/**
+	 * Render the pagination without all hidden posts.
+	 * 
+	 * @param string $where The original SQL query for the pagination.
+	 * @return string The updated SQL query for the pagination.
+	 */
+	public function render_pagination( $where ) {
+		$posts = implode( ',', self::get_posts() );
+
+		// Return the original SQL query, if no hidden posts are available.
+		if ( '' === $posts ) {
+			return $where;
+		}
+
+		// Return the original SQL query, if filter show_hidden_posts_in_pagination is set to true.
+		if ( apply_filters( 'show_hidden_posts_in_pagination', false ) ) {
+			return $where;
+		}
+
+		// Return the updated SQL query.
+		return $where . " AND p.ID NOT IN ( $posts )";
 	}
 
 }
