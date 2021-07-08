@@ -87,7 +87,7 @@ class Hidden_Posts {
 	 *
 	 * @return array Array of Post IDs.
 	 */
-	public function get_posts() {
+	public static function get_posts() {
 		return array_filter( array_map( 'absint', get_option( self::OPTION_KEY, array() ) ) );
 	}
 
@@ -262,6 +262,5 @@ $hidden_posts->run();
  * @return array Array of Post IDs.
  */
 function vip_get_hidden_posts() { // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedFunctionFound
-	$hidden_posts = new Hidden_Posts();
-	return $hidden_posts->get_posts();
+	return Hidden_Posts::get_posts();
 }
