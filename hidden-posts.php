@@ -29,7 +29,7 @@ class Hidden_Posts {
 	/**
 	 * Get hooked in!
 	 */
-	public function __construct() {
+	public function run() {
 		add_action( 'save_post', array( $this, 'save_meta' ) );
 		add_action( 'add_meta_boxes', array( $this, 'add_metabox' ) );
 		add_action( 'pre_get_posts', array( $this, 'pre_get_posts' ) );
@@ -100,7 +100,7 @@ class Hidden_Posts {
 	 *
 	 * @param int $id Post ID.
 	 */
-	public static function add_post( $id ) {
+	public function add_post( $id ) {
 		$posts = self::get_posts();
 
 		if ( in_array( $id, $posts ) ) {
@@ -253,7 +253,8 @@ class Hidden_Posts {
 
 }
 
-new Hidden_Posts();
+$hidden_posts = new Hidden_Posts();
+$hidden_posts->run();
 
 /**
  * Helper function to get hidden posts.
