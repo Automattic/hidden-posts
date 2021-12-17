@@ -191,7 +191,7 @@ class Hidden_Posts {
 			return $views;
 		}
 
-		if ( isset( $_GET['post_type'] ) && 'post' !== $_GET['post_type'] ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		if ( isset( $_GET['post_type'] ) && ! in_array( $_GET['post_type'], self::supported_post_types() ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			return $views;
 		}
 
@@ -229,7 +229,7 @@ class Hidden_Posts {
 			'hidden-posts',
 			esc_html( apply_filters( 'hidden_posts_checkbox_title', 'Visibility' ) ),
 			array( $this, 'render_metabox' ),
-			'post',
+			self::supported_post_types(),
 			'side',
 			'high'
 		);
@@ -249,6 +249,15 @@ class Hidden_Posts {
 			checked( $checked, true, false ),
 			esc_html( apply_filters( 'hidden_posts_checkbox_text', 'Hide post' ) )
 		);
+	}
+
+	/**
+	 * Get an array of supported post types for post visibility.
+	 *
+	 * @return array
+	 */
+	public static function supported_post_types() {
+		return apply_filters( 'hidden_posts_post_types', array( 'post' ) );
 	}
 
 }
