@@ -33,7 +33,7 @@ class Hidden_Posts {
 		add_action( 'save_post', array( $this, 'save_meta' ) );
 		add_action( 'add_meta_boxes', array( $this, 'add_metabox' ) );
 		add_action( 'pre_get_posts', array( $this, 'pre_get_posts' ) );
-		add_filter( 'manage_posts_columns', array( $this, 'custom_column_title' ) );
+		add_filter( 'manage_posts_columns', array( $this, 'custom_column_title' ), 10, 2 );
 		add_action( 'manage_posts_custom_column', array( $this, 'custom_column_data' ), 10, 2 );
 		add_action( 'admin_head', array( $this, 'custom_column_style' ) );
 		add_filter( 'views_edit-post', array( $this, 'custom_column_filter' ) );
@@ -145,12 +145,16 @@ class Hidden_Posts {
 	 * Add custom title to the admin columns.
 	 *
 	 * @param array $columns The original admin column titles.
+	 * @param string $post_type The post type being displayed.
 	 * @return array The updated admin column titles.
 	 */
-	public function custom_column_title( array $columns ) {
-		unset( $columns['date'] );
-		$columns['visibility'] = esc_html__( 'Visibility', 'hidden-posts' );
-		$columns['date']       = esc_html__( 'Date', 'hidden-posts' );
+	public function custom_column_title( array $columns, $post_type ) {
+		// Only add the column if it's a supported post type.
+		if ( in_array( $post_type, self::supported_post_types() ) ) {
+			unset( $columns['date'] );
+			$columns['visibility'] = esc_html__( 'Visibility', 'hidden-posts' );
+			$columns['date']       = esc_html__( 'Date', 'hidden-posts' );
+		}
 		return $columns;
 	}
 
@@ -191,7 +195,7 @@ class Hidden_Posts {
 			return $views;
 		}
 
-		if ( isset( $_GET['post_type'] ) && 'post' !== $_GET['post_type'] ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		if ( isset( $_GET['post_type'] ) && ! in_array( $_GET['post_type'], self::supported_post_types() ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			return $views;
 		}
 
@@ -229,7 +233,7 @@ class Hidden_Posts {
 			'hidden-posts',
 			esc_html( apply_filters( 'hidden_posts_checkbox_title', 'Visibility' ) ),
 			array( $this, 'render_metabox' ),
-			'post',
+			self::supported_post_types(),
 			'side',
 			'high'
 		);
@@ -249,6 +253,17 @@ class Hidden_Posts {
 			checked( $checked, true, false ),
 			esc_html( apply_filters( 'hidden_posts_checkbox_text', 'Hide post' ) )
 		);
+
+		do_action( 'hidden_posts_after_render_metabox', $post );
+	}
+
+	/**
+	 * Get an array of supported post types for post visibility.
+	 *
+	 * @return array
+	 */
+	public static function supported_post_types() {
+		return apply_filters( 'hidden_posts_post_types', array( 'post' ) );
 	}
 
 }
