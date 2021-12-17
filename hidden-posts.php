@@ -253,6 +253,8 @@ class Hidden_Posts {
 			checked( $checked, true, false ),
 			esc_html( apply_filters( 'hidden_posts_checkbox_text', 'Hide post' ) )
 		);
+
+		do_action( 'hidden_posts_after_render_metabox', $post );
 	}
 
 	/**
