@@ -21,7 +21,7 @@ The opposite of sticky posts.
 
 ## Description
 
-Hide a limited number of specified posts from the hompage.
+Hide up to 100 specified posts from the homepage of your site.
 
 If you'd like to check out the code and contribute, [join us on GitHub](https://github.com/Automattic/hidden-posts). Pull requests, issues, and plugin recommendations are more than welcome!
 
@@ -30,6 +30,12 @@ If you'd like to check out the code and contribute, [join us on GitHub](https://
 1. Upload the `hidden-posts` folder to your plugins directory (e.g. `/wp-content/plugins/`)
 2. Activate the plugin through the 'Plugins' menu in WordPress
 3. Hide posts from the post edit screen
+
+## Usage
+
+Once the plugin is activated, a new "Hide Post" checkbox will appear on the post editing screen. When the checkbox is selected and the post is saved, the post's ID is added to a list of posts to hide. This list is stored in the site's options table.
+
+Hidden posts are only excluded from the main query run on the site's homepage, and only for logged-out users. Single post displays and other queries are not affected.
 
 ## Frequently Asked Questions
 
