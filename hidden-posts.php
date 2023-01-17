@@ -6,6 +6,8 @@
  * Author:      Automattic
  * Author URI:  http://automattic.com
  * License:     GPLv2 or later
+ * Text Domain: hidden-posts
+ * Domain Path: /languages
  *
  * @package Hidden_Posts
  */
@@ -37,6 +39,14 @@ class Hidden_Posts {
 		add_action( 'manage_posts_custom_column', array( $this, 'custom_column_data' ), 10, 2 );
 		add_action( 'admin_head', array( $this, 'custom_column_style' ) );
 		add_filter( 'views_edit-post', array( $this, 'custom_column_filter' ) );
+		add_action( 'init', array( $this, 'load_textdomain' ) );
+	}
+
+	/**
+	 * Load plugin textdomain.
+	 */
+	public function load_textdomain() {
+		load_plugin_textdomain( 'hidden-posts', false, basename( dirname( __FILE__ ) ) . '/languages' );
 	}
 
 	/**
@@ -180,7 +190,7 @@ class Hidden_Posts {
 	 * @return void The custom styles for the admin columns.
 	 */
 	public function custom_column_style() {
-		print( '<style> .fixed .column-visibility { width: 5.5em; } </style>' );
+		print( '<style> .fixed .column-visibility { width: 6em; } </style>' );
 	}
 
 	/**
@@ -214,7 +224,7 @@ class Hidden_Posts {
 			'<a href="%s" %s>%s <span class="count">(%d)</span></a>',
 			admin_url( 'edit.php?post_type=post&show_hidden=1' ),
 			$class,
-			esc_html( apply_filters( 'hidden_posts_filter_title', 'Hidden' ) ),
+			esc_html__( 'Hidden', 'hidden-posts' ),
 			$result->found_posts
 		);
 
@@ -231,7 +241,7 @@ class Hidden_Posts {
 	public function add_metabox() {
 		add_meta_box(
 			'hidden-posts',
-			esc_html( apply_filters( 'hidden_posts_checkbox_title', 'Visibility' ) ),
+			esc_html__( 'Visibility', 'hidden-posts' ),
 			array( $this, 'render_metabox' ),
 			self::supported_post_types(),
 			'side',
@@ -251,7 +261,7 @@ class Hidden_Posts {
 			'<div id="superawesome-box" class="misc-pub-section"><label><input type="checkbox" name="%s" %s> %s</label></div>',
 			esc_attr( self::OPTION_KEY ),
 			checked( $checked, true, false ),
-			esc_html( apply_filters( 'hidden_posts_checkbox_text', 'Hide post' ) )
+			esc_html__( 'Hide post', 'hidden-posts' )
 		);
 
 		do_action( 'hidden_posts_after_render_metabox', $post );
